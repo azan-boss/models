@@ -10,7 +10,8 @@ export default function Home() {
   const updateTodo = useMutation(api.todo.updateTodo);
   const deleteTodo = useMutation(api.todo.deleteTodo);
   const todos = useQuery(api.todo.getTodos);
-
+  console.log(todos);
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim() === "") return;
