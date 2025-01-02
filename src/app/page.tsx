@@ -2,19 +2,24 @@
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";  // Make sure this import is correct
 import { useState } from "react";
+import { Id } from "../../convex/_generated/dataModel";  // Add this import
 
 export default function Home() {
   const [title, setTitle] = useState("");
-  const addTodo = useMutation(api.todo.addTodo);  // Match with the schema and functions
+  const addTodo = useMutation(api.todo.addTodo);
+  const updateTodo = useMutation(api.todo.updateTodo);
   const todos = useQuery(api.todo.getTodos);
-  console.log(todos);
-  console.log("updateTodo is rafy");
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim() === "") return;
     await addTodo({ title, isCompleted: false });
     setTitle("");
+  };
+
+
+  const toggleCompletion = async (id: Id<"todo">, isCompleted: boolean, title: string) => {
+    await updateTodo({ id, isCompleted: !isCompleted, title });
   };
 
   return (
@@ -32,14 +37,22 @@ export default function Home() {
           Add Todo
         </button>
       </form>
-      {todos && todos.map((todo) => (
-        <div key={todo._id}>
-          <h2>{todo.title}</h2>
-          <p>{todo.isCompleted ? "Completed" : "Incomplete"}</p>
-        </div>
-      ))}
-
-      <div>ff</div>
+      <div className="w-full max-w-md">
+        {todos && todos.map((todo) => (
+          <div key={todo._id} className="flex justify-between items-center p-2 border-b">
+            <div>
+              <h2 className={`text-lg ${todo.isCompleted ? "line-through" : ""}`}>{todo.title}</h2>
+              <p className="text-sm text-gray-500">{todo.isCompleted ? "Completed" : "Incomplete"}</p>
+            </div>
+            <button
+              onClick={() => toggleCompletion(todo._id, todo.isCompleted, todo.title)}
+              className={`p-2 rounded ${todo.isCompleted ? "bg-green-500" : "bg-red-500"} text-white`}
+            >
+              {todo.isCompleted ? "Undo" : "Complete"}
+            </button>
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
