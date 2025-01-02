@@ -6,8 +6,9 @@ import { useState } from "react";
 export default function Home() {
   const [title, setTitle] = useState("");
   const addTodo = useMutation(api.todo.addTodo);  // Match with the schema and functions
+  const todos = useQuery(api.todo.getTodos);
+  console.log(todos);
   
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim() === "") return;
@@ -30,8 +31,14 @@ export default function Home() {
           Add Todo
         </button>
       </form>
+      {todos && todos.map((todo) => (
+        <div key={todo._id}>
+          <h2>{todo.title}</h2>
+          <p>{todo.isCompleted ? "Completed" : "Incomplete"}</p>
+        </div>
+      ))}
 
-      
+      <div>ff</div>
     </main>
   );
 }
