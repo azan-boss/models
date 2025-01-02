@@ -9,18 +9,19 @@ export const addTodo = mutation({
 
 export const getTodos = query({
     handler: async (ctx) => {
-        return await ctx.db.query("todo").collect()
+        return await ctx.db.query("todo").order("desc").collect()
     }
 })
 
 export const updateTodo = mutation({
     handler: async (ctx, {id, title, isCompleted}: {id: Id<"todo">, title: string, isCompleted: boolean}) => {
-        await ctx.db.patch(id, {title, isCompleted});
+        await ctx.db.patch(id,{title,isCompleted});
     }
-})
+});
 
 export const deleteTodo = mutation({
     handler: async (ctx, {id}: {id: Id<"todo">}) => {
         await ctx.db.delete(id);
     }
 });
+

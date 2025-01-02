@@ -8,6 +8,7 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const addTodo = useMutation(api.todo.addTodo);
   const updateTodo = useMutation(api.todo.updateTodo);
+  const deleteTodo = useMutation(api.todo.deleteTodo);
   const todos = useQuery(api.todo.getTodos);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -16,7 +17,6 @@ export default function Home() {
     await addTodo({ title, isCompleted: false });
     setTitle("");
   };
-
 
   const toggleCompletion = async (id: Id<"todo">, isCompleted: boolean, title: string) => {
     await updateTodo({ id, isCompleted: !isCompleted, title });
@@ -44,12 +44,20 @@ export default function Home() {
               <h2 className={`text-lg ${todo.isCompleted ? "line-through" : ""}`}>{todo.title}</h2>
               <p className="text-sm text-gray-500">{todo.isCompleted ? "Completed" : "Incomplete"}</p>
             </div>
-            <button
-              onClick={() => toggleCompletion(todo._id, todo.isCompleted, todo.title)}
-              className={`p-2 rounded ${todo.isCompleted ? "bg-green-500" : "bg-red-500"} text-white`}
-            >
-              {todo.isCompleted ? "Undo" : "Complete"}
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => toggleCompletion(todo._id, todo.isCompleted, todo.title)}
+                className={`p-2 rounded ${todo.isCompleted ? "bg-green-500" : "bg-red-500"} text-white`}
+              >
+                {todo.isCompleted ? "Undo" : "Complete"}
+              </button>
+              <button
+                onClick={() => deleteTodo({ id: todo._id })}
+                className="p-2 rounded bg-gray-500 text-white"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
       </div>
