@@ -7,7 +7,7 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const addTodo = useMutation(api.todo.addTodo);  // Match with the schema and functions
   const todos = useQuery(api.todo.getTodos);
-  console.log(todos);
+  console.log("updated", todos);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
